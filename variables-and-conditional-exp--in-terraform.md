@@ -1,6 +1,37 @@
 #### **1. Variables**
 
-##### **String Variable**
+### **Notes on Terraform Concepts**
+
+#### **1. Variables**
+- **Purpose**: To define reusable values that can be customized and passed to Terraform configurations.  
+- **Types**:  
+  - **Input Variables**: Allow users to input values dynamically.
+  - **Environment Variables**: Terraform reads variables from environment variables prefixed with `TF_VAR_`.
+
+- **Syntax**: 
+  ```hcl
+  variable "variable_name" {
+    type        = string
+    default     = "default_value"
+    description = "Description of the variable"
+  }
+  ```
+
+- **Usage**: Reference in configuration files using `${var.variable_name}` or `var.variable_name`.
+
+- **Types of Input Variables**:
+  - **string**: Single-line text values.
+  - **number**: Numeric values.
+  - **bool**: Boolean values (`true` or `false`).
+  - **list**: Ordered collections of values.
+  - **map**: Key-value pairs.
+
+- **Override Hierarchy**:
+  1. Command-line flags (e.g., `-var`).
+  2. `.tfvars` files.
+  3. Environment variables.
+ 
+- ##### **String Variable**
 ```hcl
 variable "environment" {
   type        = string
@@ -110,6 +141,104 @@ output "app_details" {
 - Allows defining complex configurations with multiple attributes.
 
 ---
+
+
+---
+
+#### **2. Output**
+- **Purpose**: To expose values from a Terraform module to the command line or to other modules.
+  
+- **Syntax**:
+  ```hcl
+  output "output_name" {
+    value       = resource.attribute
+    description = "Description of the output"
+  }
+  ```
+
+- **Usage**: Run `terraform output` to view the values in the command line after applying a configuration.
+
+- **Example**:
+  ```hcl
+  output "instance_ip" {
+    value = aws_instance.example.public_ip
+  }
+  ```
+
+---
+
+#### **3. Count**
+- **Purpose**: To create multiple instances of a resource or module dynamically based on a variable.
+
+- **Syntax**:
+  ```hcl
+  resource "resource_type" "resource_name" {
+    count = variable_name
+    attribute = "value"
+  }
+  ```
+
+- **Accessing Count**: 
+  - Use `count.index` to access the index of each instance.
+  
+- **Example**:
+  ```hcl
+  resource "aws_instance" "example" {
+    count = 3
+    ami           = "ami-123456"
+    instance_type = "t2.micro"
+  }
+  ```
+
+  This will create three instances.
+
+---
+
+#### **4. Data Types**
+- **Primitive Types**:
+  - `string`: Example: `"Hello World"`
+  - `number`: Example: `42`
+  - `bool`: Example: `true`
+
+- **Complex Types**:
+  - `list`: Ordered collections, e.g., `["a", "b", "c"]`
+  - `map`: Unordered key-value pairs, e.g., `{"key1" = "value1", "key2" = "value2"}`
+  - `set`: Unordered collections of unique elements.
+  - `tuple`: Ordered collections of mixed types.
+  - `object`: Collection of named attributes with defined types, e.g.,
+    ```hcl
+    {
+      name = string
+      age  = number
+    }
+    ```
+
+---
+
+#### **5. Conditional Expressions**
+- **Purpose**: To create resources or define attributes dynamically based on conditions.
+
+- **Syntax**:
+  ```hcl
+  condition ? true_value : false_value
+  ```
+
+- **Example**:
+  ```hcl
+  resource "aws_instance" "example" {
+    instance_type = var.is_production ? "t2.large" : "t2.micro"
+  }
+  ```
+
+- **Using with `count` or `for_each`**:
+  ```hcl
+  count = var.create_instance ? 1 : 0
+  ```
+
+---
+
+These concepts are fundamental in making Terraform configurations reusable, modular, and dynamic, enabling infrastructure to be managed efficiently.
+
 
 #### **2. Conditional Expressions**
 
