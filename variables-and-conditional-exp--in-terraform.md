@@ -1,8 +1,4 @@
 #### **1. Variables**
-
-### **Notes on Terraform Concepts**
-
-#### **1. Variables**
 - **Purpose**: To define reusable values that can be customized and passed to Terraform configurations.  
 - **Types**:  
   - **Input Variables**: Allow users to input values dynamically.
