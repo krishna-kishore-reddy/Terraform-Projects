@@ -35,7 +35,7 @@ resource "aws_instance" "nginx-server" {
     ami = "ami-0f935a2ecd3a7bd5c"
     instance_type = "t2.micro"
     subnet_id = aws_subnet.publicsubnet.id
-    security_groups = [aws_security_group.all-traffic.id]
+    vpc_security_group_ids = [aws_security_group.all-traffic.id]
 
     root_block_device {
     volume_size           = 8
@@ -53,7 +53,7 @@ resource "aws_instance" "httpd-server" {
     ami = "ami-0f935a2ecd3a7bd5c"
     instance_type = "t2.micro"
     subnet_id = aws_subnet.publicsubnet.id
-    security_groups = [aws_security_group.all-traffic.id]
+    vpc_security_group_ids = [aws_security_group.all-traffic.id]
 
     root_block_device {
     volume_size           = 8
